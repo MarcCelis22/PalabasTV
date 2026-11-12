@@ -147,15 +147,18 @@ function getFavorites() {
   }
 }
 
+// This writes the current favorites array into localStorage so the data survives a reload.
 function saveFavorites() {
   localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
 }
 
+// This checks whether a show is already saved by comparing its id with the favorites list.
 function isFavorite(show) {
   const targetId = Number(show.id);
   return favorites.some((item) => Number(item.id) === targetId);
 }
 
+// This adds or removes a show from the favorites list and refreshes the saved data and UI.
 function toggleFavorite(show) {
   const showId = Number(show.id);
   const showName = show.name;
@@ -172,6 +175,7 @@ function toggleFavorite(show) {
   updateFavoriteButtons();
 }
 
+// This creates the star button used on a card or in the details popup to save or unsave a show.
 function createFavoriteButton(show) {
   const button = el("button", "favorite-button", isFavorite(show) ? "🌟" : "⭐");
   button.type = "button";
@@ -185,6 +189,7 @@ function createFavoriteButton(show) {
   return button;
 }
 
+// This updates every visible favorite star so it matches the current favorites list.
 function updateFavoriteButtons() {
   document.querySelectorAll(".favorite-button").forEach((button) => {
     const isSaved = favorites.some((item) => Number(item.id) === Number(button.dataset.id));
@@ -194,6 +199,7 @@ function updateFavoriteButtons() {
   });
 }
 
+// This rebuilds the “My favorites” list from the saved array so the user can see and remove items.
 function renderFavorites() {
   if (!favoritesList) return;
   favoritesList.innerHTML = "";
@@ -233,6 +239,7 @@ function renderFavorites() {
   });
 }
 
+// This clears the previous search results and draws a new card for each item returned by the API.
 function renderResults(items) {
   currentResults = items;
   results.innerHTML = ""; // clear the last search
@@ -274,6 +281,7 @@ function renderResults(items) {
   updateFavoriteButtons();
 }
 
+// This fetches search results for the typed query and passes the JSON data to renderResults.
 async function searchShows(query) {
   const response = await fetch(searchURL(query));
   const data = await response.json();
@@ -305,6 +313,7 @@ async function getJSON(url) {
   return response.json();
 }
 
+// This performs the real search, shows loading feedback, and handles empty-result or error cases cleanly.
 async function searchShows(query) {
   setStatus(`Searching for "${query}"…`, "loading");
   results.innerHTML = "";
@@ -329,6 +338,7 @@ results.addEventListener("click", (event) => {
   if (card) showDetails(card.dataset.id);
 });
 
+// This loads the full details of one show and shows a loading message while the request is in progress.
 async function showDetails(id) {
   detailsBody.replaceChildren(el("p", "status loading", "Loading details…"));
   dialog.showModal();
@@ -341,6 +351,7 @@ async function showDetails(id) {
   }
 }
 
+// This turns the raw show data into the detailed popup layout with title, summary, and links.
 function renderDetails(show) {
   const where = show.network ? show.network.name : show.webChannel ? show.webChannel.name : "";
   const minutes = show.runtime || show.averageRuntime; // runtime is null when episodes vary
@@ -364,6 +375,7 @@ function renderDetails(show) {
 }
 // STEP 5 — Promise.all: show + cast + seasons at the same time
 // TODO: rewrite showDetails with Promise.all, and renderDetails(show, cast, seasons)
+// This loads the show, cast list, and seasons together so the popup gets all the data it needs quickly.
 async function showDetails(id) {
   detailsBody.replaceChildren(el("p", "status loading", "Loading details…"));
   dialog.showModal();
@@ -384,6 +396,7 @@ async function showDetails(id) {
   }
 }
 
+// This builds the full popup content with the title, seasons, cast list, and external link.
 function renderDetails(show, cast, seasons) {
   const where = show.network ? show.network.name : show.webChannel ? show.webChannel.name : "";
   const minutes = show.runtime || show.averageRuntime; // runtime is null when episodes vary

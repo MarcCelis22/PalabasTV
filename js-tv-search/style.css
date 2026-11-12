@@ -159,6 +159,7 @@ code {
   padding-bottom: 40px;
 }
 
+/* This styles the saved favorites panel so users can see all their marked shows in one compact area. */
 .favorites-panel {
   margin: 0 0 30px;
   padding: 18px 20px 20px;
@@ -276,6 +277,7 @@ code {
   border-color: var(--accent);
 }
 
+/* This makes the star button sit in the corner of each result card so the user can save or unsave a show quickly. */
 .favorite-button {
   position: absolute;
   top: 10px;
@@ -389,6 +391,7 @@ code {
   border-radius: 8px;
 }
 
+/* This keeps the show title and its favorite star aligned neatly inside the details popup. */
 .detail-header {
   display: flex;
   align-items: center;
